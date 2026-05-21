@@ -14,255 +14,407 @@
 
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Lucide -->
-  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body class="bg-slate-100">
 
-  <div id="root"></div>
+<div id="root"></div>
 
-  <script type="text/babel">
+<script type="text/babel">
 
-    const { useState } = React;
+const { useState } = React;
 
-    const QUESTIONS = [
-      {
-        id: 1,
-        text: "Quando algo no comportamento do seu filho te chama atenção, qual costuma ser seu primeiro reflexo?",
-        options: [
-          { text: "Pesquisar ou tentar entender na hora", type: "atenta" },
-          { text: "Observar mais um pouco antes de concluir qualquer coisa", type: "equilibrada" },
-          { text: "Pensar “depois vejo isso com calma”", type: "sobrecarregada" },
-          { text: "Acreditar que provavelmente é só uma fase normal", type: "tranquila" }
-        ]
-      },
+const QUESTIONS = [
+  {
+    id: 1,
+    isAnchor: true,
+    text: "Quando algo no comportamento do seu filho te chama atenção, qual costuma ser seu primeiro reflexo?",
+    options: [
+      { text: "Pesquisar ou tentar entender na hora", type: "atenta" },
+      { text: "Observar mais um pouco antes de concluir qualquer coisa", type: "equilibrada" },
+      { text: "Pensar “depois vejo isso com calma” — mesmo que às vezes acabe esquecendo", type: "sobrecarregada" },
+      { text: "Acreditar que provavelmente é só uma fase normal", type: "tranquila" }
+    ]
+  },
 
-      {
-        id: 2,
-        text: "Qual dessas frases mais combina com você?",
-        options: [
-          { text: "“Eu vivo observando se tá tudo certo com meu filho.”", type: "atenta" },
-          { text: "“Gosto de entender as coisas sem paranoia.”", type: "equilibrada" },
-          { text: "“Queria ter mais tempo pra acompanhar tudo.”", type: "sobrecarregada" },
-          { text: "“Cada criança tem seu próprio tempo.”", type: "tranquila" }
-        ]
-      },
+  {
+    id: 2,
+    isAnchor: false,
+    text: "Qual dessas frases mais combina com você?",
+    options: [
+      { text: "“Eu vivo observando se tá tudo certo com meu filho.”", type: "atenta" },
+      { text: "“Gosto de entender as coisas sem entrar em paranoia.”", type: "equilibrada" },
+      { text: "“Queria ter mais tempo e energia pra acompanhar tudo.”", type: "sobrecarregada" },
+      { text: "“Cada criança tem seu próprio tempo.”", type: "tranquila" }
+    ]
+  },
 
-      {
-        id: 3,
-        text: "Quando uma mãe comenta algo sobre desenvolvimento, você:",
-        options: [
-          { text: "Fica pensando nisso depois", type: "atenta" },
-          { text: "Reflete um pouco e segue tranquila", type: "equilibrada" },
-          { text: "Sente culpa por não conseguir acompanhar tudo", type: "sobrecarregada" },
-          { text: "Não compara muito", type: "tranquila" }
-        ]
-      },
+  {
+    id: 3,
+    isAnchor: false,
+    text: "Quando uma mãe comenta que o filho dela já faz algo que o seu ainda não faz, você normalmente:",
+    options: [
+      { text: "Fica pensando nisso depois", type: "atenta" },
+      { text: "Reflete um pouco, mas segue tranquila", type: "equilibrada" },
+      { text: "Sente culpa por achar que poderia estar mais presente", type: "sobrecarregada" },
+      { text: "Não compara muito — cada criança evolui de um jeito", type: "tranquila" }
+    ]
+  },
 
-      {
-        id: 4,
-        text: "Se um profissional dissesse: 'É só uma fase', você:",
-        options: [
-          { text: "Ainda ficaria com dúvida", type: "atenta" },
-          { text: "Observaria mais um pouco", type: "equilibrada" },
-          { text: "Aceitaria e seguiria a rotina", type: "sobrecarregada" },
-          { text: "Ficaria tranquila", type: "tranquila" }
-        ]
-      }
-    ];
+  {
+    id: 4,
+    isAnchor: true,
+    text: "Quando seu filho faz birra ou te desafia, qual costuma ser sua reação?",
+    options: [
+      { text: "Tento corrigir, mas depois fico pensando se fiz certo", type: "atenta" },
+      { text: "Dou limite e sigo sem drama", type: "equilibrada" },
+      { text: "Depende do dia. Às vezes tenho paciência, às vezes já estou esgotada", type: "sobrecarregada" },
+      { text: "Prefiro conversar e deixar ele aprender naturalmente", type: "tranquila" }
+    ]
+  },
 
-    const RESULTS = {
-      atenta: {
-        title: "A Mãe Atenta",
-        text: "Você percebe sinais antes da maioria e observa muitos detalhes."
-      },
+  {
+    id: 5,
+    isAnchor: false,
+    text: "No dia a dia, como você consome conteúdo sobre maternidade ou desenvolvimento infantil?",
+    options: [
+      { text: "Estou sempre vendo vídeos, posts ou pesquisando alguma coisa", type: "atenta" },
+      { text: "Sigo poucos conteúdos, mas escolho bem", type: "equilibrada" },
+      { text: "Salvo muita coisa pra ver depois — e quase nunca consigo", type: "sobrecarregada" },
+      { text: "Evito excesso de informação porque acho que isso confunde mais", type: "tranquila" }
+    ]
+  },
 
-      equilibrada: {
-        title: "A Mãe Equilibrada",
-        text: "Você consegue unir calma, presença e observação."
-      },
+  {
+    id: 6,
+    isAnchor: false,
+    text: "Se um profissional dissesse: “Tá tudo bem, é só uma fase”, você provavelmente:",
+    options: [
+      { text: "Ainda ficaria com a pulga atrás da orelha", type: "atenta" },
+      { text: "Observaria mais um pouco antes de decidir", type: "equilibrada" },
+      { text: "Aceitaria e seguiria a rotina", type: "sobrecarregada" },
+      { text: "Ficaria tranquila e deixaria o tempo agir", type: "tranquila" }
+    ]
+  },
 
-      sobrecarregada: {
-        title: "A Mãe Sobrecarregada",
-        text: "Você tenta dar conta de tudo ao mesmo tempo."
-      },
+  {
+    id: 7,
+    isAnchor: true,
+    text: "Qual dessas frases mais passa pela sua cabeça?",
+    options: [
+      { text: "“E se eu estiver deixando passar alguma coisa?”", type: "atenta" },
+      { text: "“Será que estou interpretando os sinais dele da forma certa?”", type: "equilibrada" },
+      { text: "“Será que estou conseguindo ser mãe do jeito que meu filho precisa?”", type: "sobrecarregada" },
+      { text: "“Será que às vezes eu relaxo mais do que deveria?”", type: "tranquila" }
+    ]
+  },
 
-      tranquila: {
-        title: "A Mãe Tranquila",
-        text: "Você acredita no tempo da criança e evita pressão excessiva."
-      }
+  {
+    id: 8,
+    isAnchor: false,
+    text: "Se você pudesse aprender uma coisa em 2h com a Dra. Fáthima, o que escolheria?",
+    options: [
+      { text: "Saber diferenciar o que é normal do que merece atenção", type: "atenta" },
+      { text: "Aprender a observar meu filho com mais clareza", type: "equilibrada" },
+      { text: "Entender o essencial sem precisar fazer um curso enorme", type: "sobrecarregada" },
+      { text: "Saber quando confiar na intuição — e quando agir", type: "tranquila" }
+    ]
+  }
+];
+
+const RESULTS = {
+  atenta: {
+    title: "A Mãe Atenta",
+    description: "Você observa tudo. Percebe sinais, mudanças e nuances antes da maioria."
+  },
+
+  equilibrada: {
+    title: "A Mãe Equilibrada",
+    description: "Você consegue unir calma, presença e observação sem cair em extremos."
+  },
+
+  sobrecarregada: {
+    title: "A Mãe Sobrecarregada",
+    description: "Você tenta dar conta de tudo ao mesmo tempo e muitas vezes sente que está sempre atrasada."
+  },
+
+  tranquila: {
+    title: "A Mãe Tranquila",
+    description: "Você acredita no tempo da criança e evita pressão excessiva."
+  }
+};
+
+function App() {
+
+  const [screen, setScreen] = useState("intro");
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [answers, setAnswers] = useState([]);
+  const [result, setResult] = useState(null);
+
+  const currentQuestion = QUESTIONS[questionIndex];
+
+  function handleAnswer(type) {
+
+    const updatedAnswers = [...answers, type];
+
+    setAnswers(updatedAnswers);
+
+    if (questionIndex < QUESTIONS.length - 1) {
+      setQuestionIndex(questionIndex + 1);
+    } else {
+      calculateResult(updatedAnswers);
+      setScreen("capture");
+    }
+  }
+
+  function calculateResult(finalAnswers) {
+
+    const scores = {
+      atenta: 0,
+      equilibrada: 0,
+      sobrecarregada: 0,
+      tranquila: 0
     };
 
-    function App() {
+    finalAnswers.forEach(answer => {
+      scores[answer]++;
+    });
 
-      const [screen, setScreen] = useState("intro");
-      const [questionIndex, setQuestionIndex] = useState(0);
-      const [answers, setAnswers] = useState([]);
-      const [result, setResult] = useState(null);
+    let winner = "atenta";
 
-      const currentQuestion = QUESTIONS[questionIndex];
-
-      function handleAnswer(type) {
-
-        const updatedAnswers = [...answers, type];
-
-        setAnswers(updatedAnswers);
-
-        if (questionIndex < QUESTIONS.length - 1) {
-          setQuestionIndex(questionIndex + 1);
-        } else {
-          calculateResult(updatedAnswers);
-          setScreen("result");
-        }
+    Object.keys(scores).forEach(key => {
+      if (scores[key] > scores[winner]) {
+        winner = key;
       }
+    });
 
-      function calculateResult(finalAnswers) {
+    setResult(winner);
+  }
 
-        const scores = {
-          atenta: 0,
-          equilibrada: 0,
-          sobrecarregada: 0,
-          tranquila: 0
-        };
+  if (screen === "intro") {
 
-        finalAnswers.forEach(answer => {
-          scores[answer]++;
-        });
+    return (
 
-        let winner = "atenta";
+      <div className="min-h-screen flex items-center justify-center p-4">
 
-        Object.keys(scores).forEach(key => {
-          if (scores[key] > scores[winner]) {
-            winner = key;
-          }
-        });
+        <div className="bg-white max-w-xl w-full rounded-3xl shadow-xl p-8">
 
-        setResult(winner);
-      }
+          <h1 className="text-4xl font-bold text-slate-800 mb-3">
+            QUE TIPO DE MÃE VOCÊ É?
+          </h1>
 
-      if (screen === "intro") {
+          <p className="text-lg text-slate-600 mb-6">
+            Descubra seu perfil no desenvolvimento do seu filho
+          </p>
 
-        return (
-          <div className="min-h-screen flex items-center justify-center p-4">
-
-            <div className="bg-white max-w-md w-full rounded-3xl shadow-xl p-8">
-
-              <h1 className="text-3xl font-bold text-slate-800 mb-4">
-                Que tipo de mãe você é?
-              </h1>
-
-              <p className="text-slate-600 mb-8">
-                Descubra seu perfil no desenvolvimento do seu filho.
-              </p>
-
-              <button
-                onClick={() => setScreen("quiz")}
-                className="w-full bg-sky-600 hover:bg-sky-700 text-white py-4 rounded-2xl font-bold"
-              >
-                COMEÇAR O TESTE
-              </button>
-
-            </div>
-
-          </div>
-        );
-      }
-
-      if (screen === "quiz") {
-
-        return (
-
-          <div className="min-h-screen flex items-center justify-center p-4">
-
-            <div className="max-w-2xl w-full">
-
-              <div className="mb-6">
-
-                <div className="w-full h-2 bg-slate-200 rounded-full">
-
-                  <div
-                    className="h-2 bg-sky-500 rounded-full"
-                    style={{
-                      width: `${((questionIndex + 1) / QUESTIONS.length) * 100}%`
-                    }}
-                  ></div>
-
-                </div>
-
-              </div>
-
-              <div className="bg-white rounded-3xl shadow-xl p-8">
-
-                <h2 className="text-2xl font-bold text-slate-800 mb-8">
-                  {currentQuestion.text}
-                </h2>
-
-                <div className="space-y-4">
-
-                  {currentQuestion.options.map((option, index) => (
-
-                    <button
-                      key={index}
-                      onClick={() => handleAnswer(option.type)}
-                      className="w-full text-left border border-slate-200 hover:border-sky-400 hover:bg-sky-50 rounded-2xl p-4 transition-all"
-                    >
-                      {option.text}
-                    </button>
-
-                  ))}
-
-                </div>
-
-              </div>
-
-            </div>
-
+          <div className="bg-slate-50 rounded-2xl p-5 mb-6">
+            <p className="text-slate-700 leading-relaxed">
+              Existem mães que percebem tudo.<br/>
+              Outras confiam mais no tempo da criança.<br/>
+              Algumas vivem tentando equilibrar tudo ao mesmo tempo.
+            </p>
           </div>
 
-        );
-      }
-
-      const finalData = RESULTS[result];
-
-      return (
-
-        <div className="min-h-screen flex items-center justify-center p-4">
-
-          <div className="bg-white max-w-2xl w-full rounded-3xl shadow-xl p-8">
-
-            <div className="text-center mb-8">
-
-              <div className="w-20 h-20 bg-sky-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-4xl">✓</span>
-              </div>
-
-              <h1 className="text-3xl font-bold text-slate-800">
-                {finalData.title}
-              </h1>
-
-            </div>
-
-            <p className="text-lg text-slate-600 leading-relaxed mb-8">
-              {finalData.text}
+          <div className="mb-6">
+            <p className="font-semibold text-slate-800 mb-3">
+              E cada perfil tem:
             </p>
 
-            <button className="w-full bg-sky-600 hover:bg-sky-700 text-white py-4 rounded-2xl font-bold">
-              QUERO O MANUAL AGORA
-            </button>
+            <ul className="space-y-2 text-slate-600">
+              <li>✓ uma força real</li>
+              <li>✓ um ponto cego que quase ninguém percebe</li>
+            </ul>
+          </div>
+
+          <div className="mb-8">
+            <p className="font-semibold text-slate-800 mb-3">
+              Em menos de 2 minutos, descubra:
+            </p>
+
+            <ul className="space-y-2 text-slate-600">
+              <li>✓ qual é o seu perfil</li>
+              <li>✓ o que ele revela sobre sua forma de maternar</li>
+              <li>✓ e o que mães como você mais precisam desenvolver agora</li>
+            </ul>
+          </div>
+
+          <div className="mb-8">
+            <p className="font-bold text-slate-800">
+              Por Dra. Fáthima Oliveira
+            </p>
+
+            <p className="text-slate-500">
+              Fonoaudióloga • Especialista em desenvolvimento infantil
+            </p>
+          </div>
+
+          <button
+            onClick={() => setScreen("quiz")}
+            className="w-full bg-sky-600 hover:bg-sky-700 text-white py-4 rounded-2xl font-bold"
+          >
+            COMEÇAR O TESTE
+          </button>
+
+        </div>
+
+      </div>
+
+    );
+  }
+
+  if (screen === "quiz") {
+
+    return (
+
+      <div className="min-h-screen flex items-center justify-center p-4">
+
+        <div className="max-w-2xl w-full">
+
+          <div className="mb-6">
+
+            <div className="flex justify-between mb-2 text-sm font-semibold text-slate-500">
+              <span>PERGUNTA {questionIndex + 1}</span>
+              <span>{Math.round(((questionIndex + 1) / QUESTIONS.length) * 100)}%</span>
+            </div>
+
+            <div className="w-full h-2 bg-slate-200 rounded-full">
+
+              <div
+                className="h-2 bg-sky-500 rounded-full"
+                style={{
+                  width: `${((questionIndex + 1) / QUESTIONS.length) * 100}%`
+                }}
+              ></div>
+
+            </div>
+
+          </div>
+
+          <div className="bg-white rounded-3xl shadow-xl p-8">
+
+            <h2 className="text-2xl font-bold text-slate-800 mb-8">
+              {currentQuestion.text}
+            </h2>
+
+            <div className="space-y-4">
+
+              {currentQuestion.options.map((option, index) => (
+
+                <button
+                  key={index}
+                  onClick={() => handleAnswer(option.type)}
+                  className="w-full text-left border border-slate-200 hover:border-sky-400 hover:bg-sky-50 rounded-2xl p-4 transition-all"
+                >
+                  {option.text}
+                </button>
+
+              ))}
+
+            </div>
 
           </div>
 
         </div>
 
-      );
+      </div>
 
-    }
+    );
+  }
 
-    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  if (screen === "capture") {
 
-  </script>
+    return (
+
+      <div className="min-h-screen flex items-center justify-center p-4">
+
+        <div className="bg-white max-w-xl w-full rounded-3xl shadow-xl p-8">
+
+          <h1 className="text-3xl font-bold text-slate-800 mb-4">
+            Pronto. Seu perfil foi calculado.
+          </h1>
+
+          <div className="space-y-3 text-slate-600 mb-8">
+            <p>✓ qual é o seu perfil de mãe</p>
+            <p>✓ sua maior força no desenvolvimento do seu filho</p>
+            <p>✓ o ponto cego que mais atrapalha mães como você</p>
+            <p>✓ e o que você mais precisa desenvolver agora</p>
+          </div>
+
+          <p className="text-slate-700 font-medium mb-6">
+            Preencha abaixo para receber seu resultado completo:
+          </p>
+
+          <div className="space-y-4">
+
+            <input
+              type="text"
+              placeholder="Nome"
+              className="w-full border border-slate-300 rounded-xl p-4"
+            />
+
+            <input
+              type="email"
+              placeholder="E-mail"
+              className="w-full border border-slate-300 rounded-xl p-4"
+            />
+
+            <input
+              type="tel"
+              placeholder="WhatsApp com DDD"
+              className="w-full border border-slate-300 rounded-xl p-4"
+            />
+
+            <button
+              onClick={() => setScreen("result")}
+              className="w-full bg-sky-600 hover:bg-sky-700 text-white py-4 rounded-2xl font-bold"
+            >
+              VER MEU RESULTADO
+            </button>
+
+          </div>
+
+          <p className="text-sm text-slate-400 mt-5 text-center">
+            Seus dados estão seguros e não serão compartilhados.
+          </p>
+
+        </div>
+
+      </div>
+
+    );
+  }
+
+  const finalData = RESULTS[result];
+
+  return (
+
+    <div className="min-h-screen flex items-center justify-center p-4">
+
+      <div className="bg-white max-w-2xl w-full rounded-3xl shadow-xl p-8">
+
+        <div className="text-center mb-8">
+
+          <h1 className="text-4xl font-bold text-slate-800 mb-4">
+            {finalData.title}
+          </h1>
+
+          <p className="text-lg text-slate-600 leading-relaxed">
+            {finalData.description}
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  );
+
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+</script>
 
 </body>
 </html>
